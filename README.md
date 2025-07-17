@@ -1,6 +1,18 @@
-# 东方财富股票查询库 (EMXG)
+# 东财条件选股 (EMXG)
 
 一个用于查询东方财富网股票数据并返回DataFrame格式的Python库。
+
+## ⚠️ 重要声明
+
+**EMXG为开源社区开发，并非东方财富官方提供的工具。** 该工具只是效率工具，为了便于通过Python获取东方财富条件选股数据，用于研究和学习，其原理与登录网页获取数据方式一致。
+
+**使用建议：**
+- 🔄 **建议低频使用**，反对高频调用
+- ⚠️ **高频调用会被东方财富屏蔽**，请自行评估技术和法律风险
+- 📖 **项目代码遵循MIT开源协议**，但不赞成商用
+- ⚖️ **商用请自行评估法律风险**
+
+**感谢东方财富提供免费接口和数据分享。**
 
 ## 功能特性
 
@@ -52,11 +64,15 @@ df.to_csv('stocks.csv', index=False, encoding='utf-8-sig')
 ### 运行示例
 
 ```bash
-# 基本示例
-python example.py
+# 基本示例（快速入门）
+python examples/basic_example.py
 
-# 高级示例（包含数据分析）
-python advanced_example.py
+# 完整示例（包含所有功能演示）
+python examples/complete_example.py
+
+# 或使用Makefile
+make example              # 运行基本示例
+make example-complete     # 运行完整示例
 ```
 
 ## API文档
@@ -161,16 +177,71 @@ quality_stocks = df[
 print(f"高质量股票: {len(quality_stocks)}只")
 ```
 
-## API接口信息
+## 命令行工具
 
-POST: https://np-tjxg-b.eastmoney.com/api/smart-tag/stock/v3/pw/search-code
+EMXG还提供了便捷的命令行工具：
 
-### 请求参数
-- keyWord: 查询关键词，如"今日涨停板首板;"
-- pageSize: 每页数量，默认50
-- pageNo: 页码，默认1
-- fingerprint: 来自cookie中的qgqp_b_id
-- timestamp: 微秒时间戳
-- requestId: 随机生成的请求ID
+```bash
+# 基本用法
+emxg "今日涨停" --max-count 10
 
->>>>>>> 🎉 Initial release: EMXG v2.0.0
+# 保存到文件
+emxg "涨停板首板" --max-count 20 --output stocks.csv
+
+# 显示详细日志
+emxg "连续上涨3天" --verbose
+
+# 查看帮助
+emxg --help
+```
+
+## 常见问题
+
+### Q: 如何避免被屏蔽？
+A: 建议低频使用，避免高频调用。推荐在查询间隔中加入适当的延时。
+
+### Q: 支持哪些查询关键词？
+A: 支持东方财富条件选股的所有关键词，如："今日涨停"、"涨停板首板"、"连续上涨3天"、"市盈率小于20"等。
+
+### Q: 数据格式说明
+A: 
+- 百分比字段（如涨跌幅、换手率）已转换为小数形式
+- 中文数字单位（如"3.42亿"）已转换为对应数值
+- 所有数值字段都是可直接计算的数值类型
+
+### Q: 如何处理大量数据？
+A: 使用`max_count`参数限制数据量，或使用`max_page`限制页数，避免一次性获取过多数据。
+
+## 技术细节
+
+### API接口信息
+- **接口地址**: https://np-tjxg-b.eastmoney.com/api/smart-tag/stock/v3/pw/search-code
+- **请求方式**: POST
+- **数据格式**: JSON
+
+### 主要参数
+- `keyWord`: 查询关键词
+- `pageSize`: 每页数量，默认50
+- `pageNo`: 页码，默认1
+- `fingerprint`: 客户端标识
+- `timestamp`: 微秒时间戳
+- `requestId`: 随机生成的请求ID
+
+## 贡献指南
+
+欢迎提交Issue和Pull Request！
+
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
+
+## 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 致谢
+
+- 感谢东方财富提供免费的数据接口
+- 感谢开源社区的贡献和支持
