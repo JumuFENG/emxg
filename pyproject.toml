@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "emxg"
 version = "2.0.0"
-description = "东方财富股票查询库 - 用于查询股票数据并返回DataFrame格式"
+description = "东财条件选股 - 用于查询股票数据并返回DataFrame格式"
 readme = "README.md"
 license = "MIT"
 authors = [
@@ -27,7 +27,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",

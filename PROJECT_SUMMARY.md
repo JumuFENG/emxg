@@ -2,7 +2,7 @@
 
 ## 📋 项目概述
 
-EMXG (东方财富股票查询库) 是一个用于查询东方财富网股票数据并返回pandas DataFrame格式的Python库。
+EMXG (东财条件选股) 是一个用于查询东方财富网股票数据并返回pandas DataFrame格式的Python库。
 
 ### 🎯 核心功能
 - 🚀 简单易用的股票数据查询API

@@ -79,18 +79,21 @@ upload-test: build
 docs:
 	@echo "文档生成功能待实现"
 
-# 运行示例
+# 运行基础示例
 example:
-	python example.py
+	python examples/basic_example.py
 
-# 运行高级示例
-example-advanced:
-	python advanced_example_v2.py
+# 运行完整示例
+example-complete:
+	python examples/complete_example.py
 
-# 运行所有测试
-test-all:
-	python test_logger.py
-	python final_test.py
+# 运行所有示例
+examples:
+	@echo "运行所有示例:"
+	@echo "1. 基础示例:"
+	python examples/basic_example.py
+	@echo "\n2. 完整示例:"
+	python examples/complete_example.py
 
 # 检查项目状态
 status:
