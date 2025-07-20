@@ -87,6 +87,10 @@ example:
 example-complete:
 	python examples/complete_example.py
 
+# 运行指纹示例
+example-fingerprint:
+	python examples/fingerprint_example.py
+
 # 运行所有示例
 examples:
 	@echo "运行所有示例:"
@@ -94,6 +98,8 @@ examples:
 	python examples/basic_example.py
 	@echo "\n2. 完整示例:"
 	python examples/complete_example.py
+	@echo "\n3. 指纹示例:"
+	python examples/fingerprint_example.py
 
 # 检查项目状态
 status:

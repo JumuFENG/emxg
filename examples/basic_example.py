@@ -55,5 +55,16 @@ def main():
     print(f"\n🎉 基础示例完成！")
     print("💡 运行 complete_example.py 查看更多高级功能")
 
+
+def myquery():
+    # query = '昨天阳线 今天阴线 收盘价>ma10且收盘价<(ma5+ma10)/2 最近5天都是小阴小阳线 ma10>ma30'
+    query = '今日涨停'
+    try:
+        result = search_emxg(query)
+        status = f"找到 {len(result)} 条" if not result.empty else "无数据"
+        print(f"  📈 {query}: {status}")
+    except Exception as e:
+        print(f"  ❌ {query}: 查询失败")
+
 if __name__ == "__main__":
-    main()
+    myquery()

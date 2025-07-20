@@ -1,22 +1,24 @@
 # EMXG 使用示例
 
-这个目录包含了EMXG库的使用示例，帮助您快速上手。
+这个目录包含了 EMXG 库的使用示例，帮助您快速上手。
 
 ## 📁 示例文件
 
 ### 🚀 [basic_example.py](basic_example.py)
+
 **快速入门示例** - 适合初学者
 
 - ✅ 最简单的查询用法
 - ✅ 数据保存方法
 - ✅ 多种查询类型展示
-- ⏱️ 运行时间: ~30秒
+- ⏱️ 运行时间: ~30 秒
 
 ```bash
 python examples/basic_example.py
 ```
 
 ### 🎯 [complete_example.py](complete_example.py)
+
 **完整功能演示** - 展示所有主要功能
 
 - ✅ 基本使用方法
@@ -26,28 +28,46 @@ python examples/basic_example.py
 - ✅ 数据筛选方法
 - ✅ 数据导出功能
 - ✅ 错误处理展示
-- ⏱️ 运行时间: ~2-3分钟
+- ⏱️ 运行时间: ~2-3 分钟
 
 ```bash
 python examples/complete_example.py
 ```
 
+### 🔐 [fingerprint_example.py](fingerprint_example.py)
+
+**浏览器指纹生成示例** - 展示指纹生成功能
+
+- ✅ 基本指纹生成
+- ✅ 自定义选项配置
+- ✅ 详细指纹信息展示
+- ✅ 指纹数据收集
+- ✅ 不同配置对比
+- ⏱️ 运行时间: ~10秒
+
+```bash
+python examples/fingerprint_example.py
+```
+
 ## 🎯 选择指南
 
-| 需求 | 推荐示例 | 说明 |
-|------|----------|------|
-| 快速入门 | `basic_example.py` | 5分钟了解基本用法 |
-| 学习所有功能 | `complete_example.py` | 完整功能演示 |
-| 生产环境参考 | `complete_example.py` | 包含错误处理和最佳实践 |
+| 需求         | 推荐示例                | 说明                   |
+| ------------ | ----------------------- | ---------------------- |
+| 快速入门     | `basic_example.py`      | 5 分钟了解基本用法     |
+| 学习所有功能 | `complete_example.py`   | 完整功能演示           |
+| 生产环境参考 | `complete_example.py`   | 包含错误处理和最佳实践 |
+| 指纹生成     | `fingerprint_example.py` | 浏览器指纹生成功能     |
 
 ## 🚀 快速开始
 
 1. **安装依赖**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 2. **运行基础示例**:
+
    ```bash
    python examples/basic_example.py
    ```
@@ -60,6 +80,7 @@ python examples/complete_example.py
 ## 📊 示例输出
 
 ### 基础示例输出
+
 ```
 🚀 EMXG 基础使用示例
 ========================================
@@ -103,9 +124,9 @@ if not df.empty:
 
 ## 💡 提示
 
-- 🔍 支持的查询关键词: "今日涨停"、"涨停板首板"、"连续上涨3天"等
-- 📊 返回的数据已自动转换格式（百分比→小数，中文数字→数值）
-- 💾 支持导出CSV、Excel等格式
+- 🔍 支持的查询关键词: "今日涨停"、"涨停板首板"、"连续上涨 3 天"等
+- 📊 返回的数据已自动转换格式（百分比 → 小数，中文数字 → 数值）
+- 💾 支持导出 CSV、Excel 等格式
 - 🖥️ 也可以使用命令行工具: `emxg "今日涨停" --max-count 10`
 
 ## 🆘 遇到问题？

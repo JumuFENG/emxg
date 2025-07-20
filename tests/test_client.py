@@ -17,7 +17,8 @@ class TestEMStockClient:
         client = EMStockClient()
         assert client.base_url == "https://np-tjxg-b.eastmoney.com/api/smart-tag/stock/v3/pw/search-code"
         assert client.fingerprint is not None
-        assert len(client.fingerprint) == 20  # 20位数字
+        # fingerprint现在是32位的MD5哈希值
+        assert len(client.fingerprint) == 32
     
     def test_generate_request_id(self):
         """测试请求ID生成"""
@@ -103,33 +104,34 @@ class TestDataProcessing:
     """测试数据处理功能"""
     
     def test_process_dataframe_with_duplicates(self):
-        """测试重复列名处理"""
+        """测试数据处理功能"""
         client = EMStockClient()
         
-        # 模拟有重复title的columns
+        # 模拟columns信息
         columns = [
             {"key": "PARENT_NETPROFIT{2024-12-31}", "title": "归属净利润", "dataType": "Double", "unit": "元"},
             {"key": "PARENT_NETPROFIT{2024-09-30}", "title": "归属净利润", "dataType": "Double", "unit": "元"},
             {"key": "CHG", "title": "涨跌幅", "dataType": "Double", "unit": "%"}
         ]
         
-        # 模拟DataFrame
+        # 模拟DataFrame（使用原始key作为列名）
         df = pd.DataFrame({
             "PARENT_NETPROFIT{2024-12-31}": [1000000, 2000000],
             "PARENT_NETPROFIT{2024-09-30}": [800000, 1800000],
             "CHG": [10.5, 8.2]
         })
         
-        # 处理数据
+        # 测试_process_dataframe方法（只处理数据转换，不处理列名）
         result = client._process_dataframe(df, columns)
         
-        # 验证结果
-        assert "归属净利润(2024-12-31)" in result.columns
-        assert "归属净利润(2024-09-30)" in result.columns
-        assert "涨跌幅" in result.columns
+        # 验证数据转换（列名保持原样）
+        assert "PARENT_NETPROFIT{2024-12-31}" in result.columns
+        assert "PARENT_NETPROFIT{2024-09-30}" in result.columns
+        assert "CHG" in result.columns
         
         # 验证百分比转换
-        assert result["涨跌幅"].iloc[0] == 0.105  # 10.5% -> 0.105
+        assert result["CHG"].iloc[0] == 0.105  # 10.5% -> 0.105
+        assert result["CHG"].iloc[1] == 0.082  # 8.2% -> 0.082
 
 
 if __name__ == "__main__":
