@@ -65,6 +65,7 @@ def myquery():
         print(f"  📈 {query}: {status}")
     except Exception as e:
         print(f"  ❌ {query}: 查询失败")
+        print(str(e))
 
 if __name__ == "__main__":
     myquery()

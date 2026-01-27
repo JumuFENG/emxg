@@ -5,7 +5,6 @@ EMXG 完整使用示例
 """
 
 import logging
-import pandas as pd
 from emxg import EMStockClient, search_emxg
 
 def setup_logging():
