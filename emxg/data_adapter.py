@@ -123,7 +123,7 @@ if importlib.util.find_spec("pandas") is None:
             key = col.get("key", "")
             title = col.get("title", key)
 
-            if key and key in df.data and df.data[0] and key in df.data[0]:
+            if key and key in df.columns and df.data[0] and key in df.data[0]:
                 if title in title_counts:
                     title_counts[title] += 1
                     if '{' in key and '}' in key:
