@@ -18,7 +18,7 @@ logger = logging.getLogger(__package__)
 
 
 class EMStockClient:
-    """东方财富条件选股查询客户端 - 适配器版本"""
+    """东方财富条件选股查询客户端"""
 
     def __init__(self):
         self.base_url = "https://np-tjxg-b.eastmoney.com/api/smart-tag/stock/v3/pw/search-code"

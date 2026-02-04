@@ -127,8 +127,7 @@ if not df.empty:
 - 🔍 支持的查询关键词: "今日涨停"、"涨停板首板"、"连续上涨 3 天"等
 - 📊 返回的数据已自动转换格式（百分比 → 小数，中文数字 → 数值）
 - 💾 支持导出 CSV、Excel 等格式
-- 🖥️ 也可以使用命令行工具: `emxg "今日涨停" --max-count 10`
-
+- 🖥️ 请直接运行示例脚本，例如： `python examples/basic_example.py`，或在代码中使用 `search_emxg`。
 ## 🆘 遇到问题？
 
 1. 查看 [项目文档](../README.md)

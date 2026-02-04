@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "emxg"
-version = "2.0.0"
-description = "东财条件选股 - 用于查询股票数据并返回DataFrame格式"
+version = "2.2.0"
+description = "条件选股 - 用于查询股票数据并返回DataFrame格式"
 readme = "README.md"
 license = "MIT"
 authors = [
@@ -39,7 +39,10 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "requests>=2.25.0"
+    "requests>=2.25.0",
+    "fake_useragent",
+    "pydash",
+    "tenacity"
 ]
 
 [project.optional-dependencies]
@@ -65,8 +68,6 @@ Repository = "https://github.com/emxg/emxg.git"
 "Bug Tracker" = "https://github.com/emxg/emxg/issues"
 Changelog = "https://github.com/emxg/emxg/blob/main/CHANGELOG.md"
 
-[project.scripts]
-emxg = "emxg.cli:main"
 
 [tool.setuptools]
 packages = ["emxg"]

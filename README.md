@@ -29,6 +29,13 @@
 ## 安装
 
 ```bash
+# 推荐：从 PyPI 安装（若已发布）
+pip install emxg
+
+# 开发安装（包含开发依赖和可选 Excel 支持）
+pip install -e .[dev,excel]
+
+# 或仅安装运行时依赖（开发环境）
 pip install -r requirements.txt
 ```
 
@@ -71,9 +78,6 @@ python examples/basic_example.py
 # 完整示例（包含所有功能演示）
 python examples/complete_example.py
 
-# 或使用Makefile
-make example              # 运行基本示例
-make example-complete     # 运行完整示例
 ```
 
 ## API 文档
@@ -99,9 +103,10 @@ search_emxg(keyword: str, max_count: Optional[int] = None, max_page: Optional[in
 #### 参数说明
 
 - `keyword` - 查询关键词，默认"今日涨停"
-- `page_size` - 每页数量，默认 50
 - `max_count` - 最大返回数据条数，None 表示不限制
 - `max_page` - 最大页数，None 表示不限制
+
+> **注意：** 便捷函数 `search_emxg` 不接受 `page_size` 参数，内部使用默认 `page_size=50`。如需自定义 `page_size`，请使用 `EMStockClient.search`。
 
 #### 数据自动处理
 
@@ -178,24 +183,7 @@ quality_stocks = df[
 print(f"高质量股票: {len(quality_stocks)}只")
 ```
 
-## 命令行工具
-
-EMXG 还提供了便捷的命令行工具：
-
-```bash
-# 基本用法
-emxg "今日涨停" --max-count 10
-
-# 保存到文件
-emxg "涨停板首板" --max-count 20 --output stocks.csv
-
-# 显示详细日志
-emxg "连续上涨3天" --verbose
-
-# 查看帮助
-emxg --help
-```
-
+> **注意：** 本项目**不提供命令行工具**。如需演示或测试，请直接运行 `examples` 目录下的示例脚本（例如 `python examples/basic_example.py`），或在代码中使用 `EMStockClient` / `search_emxg`。
 ## 常见问题
 
 ### Q: 如何避免被屏蔽？

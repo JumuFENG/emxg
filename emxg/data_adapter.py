@@ -152,6 +152,13 @@ if importlib.util.find_spec("pandas") is None:
                 row[column_name] = converter(row[column_name])
         return df
 
+    def concat(dfs: List[DataFrame]) -> DataFrame:
+        """连接多个DataFrame"""
+        combined_data = []
+        for df in dfs:
+            combined_data.extend(df.data)
+        return DataFrame(data=combined_data)
+
 else:
     import pandas as pd
     DataFrame = pd.DataFrame
@@ -189,6 +196,9 @@ else:
         df[column_name] = df[column_name].apply(converter)
         return df
 
+    def concat(dfs: List[DataFrame]) -> DataFrame:
+        """连接多个DataFrame"""
+        return pd.concat(dfs, ignore_index=True)
 
 class DataProcessor:
     """数据处理适配器类"""

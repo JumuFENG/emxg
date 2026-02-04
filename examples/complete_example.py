@@ -283,7 +283,6 @@ def main():
         print("🎉 所有示例运行完成！")
         print("=" * 80)
         print("\n📚 更多功能:")
-        print("  - 命令行工具: emxg '今日涨停' --max-count 10 --output stocks.csv")
         print("  - 详细文档: 查看 README.md")
         print("  - 项目地址: https://github.com/JumuFENG/emxg")
         
