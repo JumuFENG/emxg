@@ -6,7 +6,7 @@ import pydash as _
 from typing import List, Dict, Any, Optional, Union
 from tenacity import retry, stop_after_attempt, retry_if_exception_type, wait_exponential
 from functools import lru_cache
-from .data_adapter import DataFrame, concat
+from .data_adapter import DataFrame, concat, DataProcessor
 from .device_info import wencai_session, wencai_headers
 from .wencai_converter import parse_url_params, xuangu_tableV1_handler, multi_show_type_handler
 
@@ -19,6 +19,7 @@ class WencaiStockClient:
     '''
     def __init__(self):
         self.session = wencai_session()
+        self.data_processor = DataProcessor()
 
     @retry(
         wait=wait_exponential(multiplier=1, min=4, max=10),
@@ -83,6 +84,7 @@ class WencaiStockClient:
             if pro:
                 target_url = f'{target_url}?iwcpro=1'
             path = 'answer.components.0.data.datas'
+            colpath = 'answer.components.0.data.columns'
         else:
             if isinstance(find, List):
                 # 传入股票代码列表时，拼接
@@ -97,6 +99,7 @@ class WencaiStockClient:
             }
             target_url = 'http://www.iwencai.com/unifiedwap/unified-wap/v2/stock-pick/find'
             path = 'data.data.datas'
+            colpath = 'data.data.columns'
 
         logger.info(f'第{data.get("page")}页开始')
 
@@ -104,9 +107,10 @@ class WencaiStockClient:
         res = self.post(target_url, data=data, headers=wencai_headers(user_agent), **request_params)
         result = json.loads(res.text)
         data_list = _.get(result, path)
+        columns = _.get(result, colpath)
         if len(data_list) > 0:
             logger.info(f'第{data.get("page")}页成功')
-            result = DataFrame.from_dict(data_list)
+            result = self.data_processor.process_data(data_list, columns)
         else:
             logger.error(f'第{data.get("page")}页返回空！')
             raise Exception("data_list is empty!")
@@ -201,3 +205,4 @@ def search_wencai(keyword: str, max_count: Optional[int] = None,
     elif max_count is not None and max_count <= 100:
         loop = False
     return create_client().search(loop=loop, query=keyword)
+    

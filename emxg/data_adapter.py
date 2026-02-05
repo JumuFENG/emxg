@@ -113,6 +113,14 @@ if importlib.util.find_spec("pandas") is None:
             """支持迭代"""
             return enumerate(self.data)
 
+        def rename(self, columns: Dict[str, str]) -> 'DataFrame':
+            """重命名列"""
+            for row in self.data:
+                for old_key, new_key in columns.items():
+                    if old_key in row:
+                        row[new_key] = row.pop(old_key)
+            return self
+
     def process_column_mapping(df: DataFrame, columns_info: List[Dict[str, Any]]) -> DataFrame:
         """使用纯Python处理列名映射"""
         # 处理列名映射
@@ -121,7 +129,7 @@ if importlib.util.find_spec("pandas") is None:
 
         for col in columns_info:
             key = col.get("key", "")
-            title = col.get("title", key)
+            title = col.get("title", key) if 'title' in col else col.get('index_name', key)
 
             if key and key in df.columns and df.data[0] and key in df.data[0]:
                 if title in title_counts:
@@ -137,12 +145,7 @@ if importlib.util.find_spec("pandas") is None:
 
                 column_mapping[key] = unique_title
 
-        # 重命名列
-        for row in df.data:
-            for old_key, new_key in column_mapping.items():
-                if old_key in row:
-                    row[new_key] = row.pop(old_key)
-
+        df.rename(column_mapping)
         return df
 
     def convert_column(df: DataFrame, column_name: str, converter) -> None:
@@ -152,7 +155,7 @@ if importlib.util.find_spec("pandas") is None:
                 row[column_name] = converter(row[column_name])
         return df
 
-    def concat(dfs: List[DataFrame]) -> DataFrame:
+    def concat(dfs: List[DataFrame], ignore_index=True) -> DataFrame:
         """连接多个DataFrame"""
         combined_data = []
         for df in dfs:
@@ -171,7 +174,7 @@ else:
 
         for col in columns_info:
             key = col.get("key", "")
-            title = col.get("title", key)
+            title = col.get("title", key) if 'title' in col else col.get('index_name', key)
 
             if key and key in df.columns:
                 if title in title_counts:
@@ -196,7 +199,7 @@ else:
         df[column_name] = df[column_name].apply(converter)
         return df
 
-    def concat(dfs: List[DataFrame]) -> DataFrame:
+    def concat(dfs: List[DataFrame], ignore_index=True) -> DataFrame:
         """连接多个DataFrame"""
         return pd.concat(dfs, ignore_index=True)
 
@@ -266,8 +269,10 @@ class DataProcessor:
         """转换数据类型"""
         for col_info in columns_info:
             key = col_info.get("key", "")
-            title = col_info.get("title", key)
-            data_type = col_info.get("dataType", "")
+            title = col_info.get("title", key) if 'title' in col_info else col_info.get('index_name', key)
+            data_type = col_info.get("dataType", "") if 'dataType' in col_info else col_info.get('type', '')
+            if data_type is None:
+                data_type = ""
             unit = col_info.get("unit", "")
 
             # 确定要处理的列名
@@ -275,14 +280,14 @@ class DataProcessor:
             if not col_name in df.columns:
                 continue
 
-            if data_type in ["Double", "Long", "Integer"]:
+            if data_type.upper() in ["DOUBLE", "LONG", "INTEGER"]:
                 df = convert_column(df, col_name, self._convert_chinese_number)
 
                 # 如果单位是%，转换为小数
                 if unit == "%":
                     df = convert_column(df, col_name, self._convert_percentage)
 
-            elif data_type == "Boolean":
+            elif data_type.upper() == "BOOLEAN":
                 # 布尔类型转换
                 df = convert_column(df, col_name, lambda x: str(x).strip() in ['首板', 'True', '1', 'true'])
 
