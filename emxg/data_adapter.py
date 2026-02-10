@@ -109,8 +109,7 @@ if importlib.util.find_spec("pandas") is None:
 
         def rename(self, columns: Dict[str, str]) -> 'DataFrame':
             """重命名列"""
-            self.data = [{columns.get(col, col): value for col, value in row.items()} for row in self.data]
-            return self
+            return DataFrame(data=[{columns.get(col, col): value for col, value in row.items()} for row in self.data])
 
         def assign(self, **kwargs) -> 'DataFrame':
             """添加或修改列"""
@@ -123,9 +122,7 @@ if importlib.util.find_spec("pandas") is None:
                     else:
                         new_row[key] = value
                 new_data.append(new_row)
-            self.data = new_data
-            return self
-
+            return DataFrame(data=new_data)
 
     def process_column_mapping(df: DataFrame, columns_info: List[Dict[str, Any]]) -> DataFrame:
         """使用纯Python处理列名映射"""
@@ -151,15 +148,7 @@ if importlib.util.find_spec("pandas") is None:
 
                 column_mapping[key] = unique_title
 
-        df.rename(column_mapping)
-        return df
-
-    def convert_column(df: DataFrame, column_name: str, converter) -> None:
-        """转换指定列的数据"""
-        for row in df.data:
-            if column_name in row:
-                row[column_name] = converter(row[column_name])
-        return df
+        return df.rename(column_mapping)
 
     def concat(dfs: List[DataFrame], ignore_index=True) -> DataFrame:
         """连接多个DataFrame"""
@@ -197,13 +186,7 @@ else:
                 column_mapping[key] = unique_title
 
         # 重命名列
-        df = df.rename(columns=column_mapping)
-        return df
-
-    def convert_column(df: DataFrame, column_name: str, converter) -> None:
-        """转换指定列的数据"""
-        df[column_name] = df[column_name].apply(converter)
-        return df
+        return df.rename(columns=column_mapping)
 
     def concat(dfs: List[DataFrame], ignore_index=True) -> DataFrame:
         """连接多个DataFrame"""
@@ -288,15 +271,15 @@ class DataProcessor:
                 continue
 
             if data_type.upper() in ["DOUBLE", "LONG", "INTEGER"]:
-                df = convert_column(df, col_name, self._convert_chinese_number)
+                df = df.assign(**{col_name: lambda x: x[col_name].apply(self._convert_chinese_number) if hasattr(x[col_name], 'apply') else self._convert_chinese_number(x[col_name])})
 
                 # 如果单位是%，转换为小数
                 if unit == "%":
-                    df = convert_column(df, col_name, self._convert_percentage)
+                    df = df.assign(**{col_name: lambda x: x[col_name].apply(self._convert_percentage) if hasattr(x[col_name], 'apply') else self._convert_percentage(x[col_name])})
 
             elif data_type.upper() == "BOOLEAN":
                 # 布尔类型转换
-                df = convert_column(df, col_name, lambda x: str(x).strip() in ['首板', 'True', '1', 'true'])
+                df = df.assign(**{col_name: lambda x: x[col_name].apply(self._convert_bool) if hasattr(x[col_name], 'apply') else self._convert_bool(x[col_name])})
 
         return df
 
@@ -341,3 +324,5 @@ class DataProcessor:
         except (ValueError, TypeError):
             return value
 
+    def _convert_bool(self, value: Any) -> bool:
+        return str(value).strip() in ['首板', 'True', '1', 'true']

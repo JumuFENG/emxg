@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "emxg"
-version = "2.2.4"
+version = "2.25"
 description = "条件选股 - 用于查询股票数据并返回DataFrame格式"
 readme = "README.md"
 license = "MIT"
