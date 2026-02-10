@@ -39,14 +39,6 @@ if importlib.util.find_spec("pandas") is None:
             """获取前n行数据"""
             return DataFrame(data=self.data[:n])
 
-        def filter(self, condition) -> 'DataFrame':
-            """根据条件过滤数据"""
-            filtered_data = []
-            for row in self.data:
-                if condition(row):
-                    filtered_data.append(row)
-            return DataFrame(data=filtered_data)
-
         def sort_values(self, by: str, ascending: bool = True) -> 'DataFrame':
             """按指定列排序"""
             if not self.data or by not in self.columns:
@@ -106,6 +98,8 @@ if importlib.util.find_spec("pandas") is None:
                 return [row.get(key) for row in self.data]
             elif isinstance(key, slice):
                 return DataFrame(data=self.data[key])
+            elif isinstance(key, (list, tuple)):
+                return DataFrame(data=[{col: row[col] for col in key} for row in self.data])
             else:
                 raise KeyError(f"不支持的key类型: {type(key)}")
 
@@ -115,11 +109,23 @@ if importlib.util.find_spec("pandas") is None:
 
         def rename(self, columns: Dict[str, str]) -> 'DataFrame':
             """重命名列"""
-            for row in self.data:
-                for old_key, new_key in columns.items():
-                    if old_key in row:
-                        row[new_key] = row.pop(old_key)
+            self.data = [{columns.get(col, col): value for col, value in row.items()} for row in self.data]
             return self
+
+        def assign(self, **kwargs) -> 'DataFrame':
+            """添加或修改列"""
+            new_data = []
+            for row in self.data:
+                new_row = row.copy()
+                for key, value in kwargs.items():
+                    if callable(value):
+                        new_row[key] = value(new_row)
+                    else:
+                        new_row[key] = value
+                new_data.append(new_row)
+            self.data = new_data
+            return self
+
 
     def process_column_mapping(df: DataFrame, columns_info: List[Dict[str, Any]]) -> DataFrame:
         """使用纯Python处理列名映射"""
@@ -202,6 +208,7 @@ else:
     def concat(dfs: List[DataFrame], ignore_index=True) -> DataFrame:
         """连接多个DataFrame"""
         return pd.concat(dfs, ignore_index=True)
+
 
 class DataProcessor:
     """数据处理适配器类"""

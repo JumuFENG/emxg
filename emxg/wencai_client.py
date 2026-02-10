@@ -52,7 +52,7 @@ class WencaiStockClient:
         if pro:
             data['iwcpro'] = 1
 
-        logger.info(f'获取condition开始')
+        logger.debug(f'获取condition开始')
 
         result = self.post(
             'http://www.iwencai.com/customized/chart/get-robot-data',
@@ -60,7 +60,7 @@ class WencaiStockClient:
         result = self.convert(result)
 
         if result:
-            logger.info(f'获取get_robot_data成功')
+            logger.debug(f'获取get_robot_data成功')
         else:
             logger.info(f'获取get_robot_data失败')
 
@@ -101,7 +101,7 @@ class WencaiStockClient:
             path = 'data.data.datas'
             colpath = 'data.data.columns'
 
-        logger.info(f'第{data.get("page")}页开始')
+        logger.debug(f'第{data.get("page")}页开始')
 
         request_params['timeout'] = (5, 10)
         res = self.post(target_url, data=data, headers=wencai_headers(user_agent), **request_params)
@@ -109,7 +109,7 @@ class WencaiStockClient:
         data_list = _.get(result, path)
         columns = _.get(result, colpath)
         if len(data_list) > 0:
-            logger.info(f'第{data.get("page")}页成功')
+            logger.debug(f'第{data.get("page")}页成功')
             result = self.data_processor.process_data(data_list, columns)
         else:
             logger.error(f'第{data.get("page")}页返回空！')
