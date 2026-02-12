@@ -9,6 +9,7 @@ import time
 import requests
 from typing import Optional, Union, List, Dict, Any
 from functools import lru_cache
+from traceback import format_exc
 
 from .data_adapter import DataProcessor, DataFrame
 from .emfinger import get_printfinger
@@ -161,6 +162,9 @@ def search_emxg(keyword: str, max_count: Optional[int] = None,
     Returns:
         Union[DataFrame, List[Dict]]: 股票数据，有pandas返回DataFrame，否则返回字典列表
     """
-    client = create_client()
-    return client.search(keyword, page_size=50, max_count=max_count, max_page=max_page)
-
+    try:
+        return create_client().search(keyword, page_size=50, max_count=max_count, max_page=max_page)
+    except Exception as e:
+        logger.error('获取东方财富数据失败', e)
+        logger.debug(format_exc())
+    return None

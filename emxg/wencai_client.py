@@ -6,8 +6,9 @@ import pydash as _
 from typing import List, Dict, Any, Optional, Union
 from tenacity import retry, stop_after_attempt, retry_if_exception_type, wait_exponential
 from functools import lru_cache
+from traceback import format_exc
 from .data_adapter import DataFrame, concat, DataProcessor
-from .device_info import wencai_session, wencai_headers
+from .device_info import wencai_session, wencai_headers, random_useragent
 from .wencai_converter import parse_url_params, xuangu_tableV1_handler, multi_show_type_handler
 
 
@@ -143,6 +144,7 @@ class WencaiStockClient:
 
     def convert(self, res):
         '''处理get_robot_data的结果'''
+        logger.debug(res.text)
         result = json.loads(res.text)
         content = _.get(result, 'data.answer.0.txt.0.content')
         if type(content) == str:
@@ -204,5 +206,10 @@ def search_wencai(keyword: str, max_count: Optional[int] = None,
         loop = False
     elif max_count is not None and max_count <= 100:
         loop = False
-    return create_client().search(loop=loop, query=keyword)
-    
+    try:
+        return create_client().search(loop=loop, query=keyword)
+    except Exception as e:
+        logger.error('获取i问财数据失败', e)
+        logger.debug(format_exc())
+        random_useragent.cache_clear()
+    return None

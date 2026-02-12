@@ -9,7 +9,7 @@ from .emfinger import get_printfinger
 from .wencai_client import WencaiStockClient, search_wencai
 
 
-__version__ = "2.25"
+__version__ = "2.2.6"
 
 
 def search(keyword: str, max_count: int = None, max_page: int = None) -> DataFrame:
